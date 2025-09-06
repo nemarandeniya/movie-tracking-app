@@ -23,7 +23,9 @@ const userSchema = new mongoose.Schema({
     },
     savedMovies: [
         {
-            type: String
+            imdbId: String,
+            title: String,
+            poster: String
         }
     ]
 }, {

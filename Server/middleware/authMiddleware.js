@@ -3,13 +3,17 @@ import User from '../models/userModel.js'
 
 const verifyUser = async (req, res, next) => {
     try {
-        console.log(req.headers.authorization);
-
+        // console.log(req.headers.authorization);
         //Check for JWT in the Authorization header
-        const token = req.headers.authorization.split(' ')[1]
-        if (!token) {
-            return res.status(404).json({ success: false, error: "Token Not Provided" })
+        const authHeader = req.headers.authorization
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(401).json({ success: false, error: "No token provided" })
         }
+
+        const token = authHeader.split(' ')[1]
+        // if (!token) {
+        //     return res.status(404).json({ success: false, error: "Token Not Provided" })
+        // }
 
         //Verify the token using secret key
         //Decode token → extract user ID
@@ -19,7 +23,7 @@ const verifyUser = async (req, res, next) => {
         }
 
         //Fetch user from DB (without password)
-        const user = await User.findById({ _id: decoded._id }).select('-password')
+        const user = await User.findById(decoded.id).select('-password')
         if (!user) {
             return res.status(404).json({ success: false, error: "User Not Found" })
         }

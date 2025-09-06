@@ -8,6 +8,7 @@ import authRoutes from "./routes/auth.js"
 import path from 'path'
 
 
+
 const app = express()
 app.use(cors())
 app.use(express.json())

@@ -70,10 +70,20 @@ const loginUser = async (req, res) => {
 }
 
 const verify = (req, res) => {
-    res.status(200).json({ success: true, token, user: req.user })
+    res.status(200).json({ success: true, user: req.user })
 }
 
-export { loginUser, verify, registerUser, upload }
+const getUserDetails = async (req, res) => {
+    try {
+        console.log(req.user);
+
+        res.json({ success: true, user: req.user })
+    } catch (error) {
+        res.status(500).json({ success: false, error: "Server error" });
+    }
+}
+
+export { loginUser, verify, registerUser, upload, getUserDetails }
 
 // Login controller = security guard giving you a visitor badge (the JWT).
 // verifyUser middleware = security checks at each door making sure your badge is valid before letting you into different rooms (routes).

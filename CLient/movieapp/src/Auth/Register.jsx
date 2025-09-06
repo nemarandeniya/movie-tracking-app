@@ -39,7 +39,7 @@ const Register = () => {
             const response = await axios.post('http://localhost:3000/users/register', userOb)
             if (response.data.success) {
                 alert("add successfully")
-                navigate("/movies")
+                navigate("/")
             }
         } catch (error) {
             if (error.response && !error.response.data.success) {

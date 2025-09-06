@@ -1,14 +1,14 @@
 import express from "express"
-import { getMovies, getMovieDetails  /*, addMovie, upload, getMovieById, updateMovie, deleteMovie */ } from "../controller/movieController.js"
+import { getMovies, getMovieDetails, addMoviesToUser, removeMoviesFromUser } from "../controller/movieController.js"
+import verifyUser from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
 /* READ */
-router.get('/', getMovies)
-router.get('/:id', getMovieDetails)
-// router.post('/add', upload.single('poster'), addMovie)
-// router.get("/:id", getMovieById)
-// router.put("/:id", updateMovie)
-// router.delete("/:id", deleteMovie)
+router.get('/', verifyUser, getMovies)
+router.get('/:id', verifyUser, getMovieDetails)
+router.post('/addmovies', verifyUser, addMoviesToUser)
+router.post('/removemovies', verifyUser, removeMoviesFromUser)
+
 
 export default router

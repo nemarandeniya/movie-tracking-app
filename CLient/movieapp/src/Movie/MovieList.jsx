@@ -12,7 +12,11 @@ const MovieList = () => {
     const [selectedMovie, setSelectedMovie] = useState(null)
     const fetchMovies = async (query) => {
         try {
-            const res = await axios.get(`http://localhost:3000/movies?s=${query}`)
+            const res = await axios.get(`http://localhost:3000/movies?s=${query}`, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('token')}`
+                }
+            })
             setMovies(res.data.movies)
         } catch (error) {
             console.error(error);
@@ -28,7 +32,11 @@ const MovieList = () => {
 
     const handlemovieClick = async (imdbId) => {
         try {
-            const res = await axios.get(`http://localhost:3000/movies/${imdbId}`)
+            const res = await axios.get(`http://localhost:3000/movies/${imdbId}`, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('token')}`
+                }
+            })
             if (res.data.success) {
                 setSelectedMovie(res.data.movie)
             }
@@ -37,9 +45,32 @@ const MovieList = () => {
         }
     }
 
+    const handleMovieSave = async (movie) => {
+        try {
+            const token = localStorage.getItem("token")
+            const res = await axios.post("http://localhost:3000/movies/addmovies", {
+                imdbID: movie.imdbID,
+                title: movie.Title,
+                poster: movie.Poster
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+
+
+            if (res.data.success) {
+                alert("Movie saved successfully")
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
 
     return (
         <Box sx={{ maxWidth: "100%", maxHeight: "100vh", mx: "auto", mt: 4, backgroundColor: "#dfe1e0ff", borderRadius: 3, overflowY: "auto" }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-end", p: 2 }}>
+                <Button variant="contained" sx={{ bgcolor: "#67C090", color: "white", ml: 3 }} component={Link} to="/userprofile">User Profile</Button>
+            </Box>
             <Typography variant="h5" mb={2} align='center' mt={4} sx={{
                 fontFamily: "'Raleway', cursive",
             }}>Movie Profile
@@ -76,7 +107,8 @@ const MovieList = () => {
                                         bgcolor: "darkgreen"
                                     },
                                     p: 0
-                                }}><AddIcon fontSize='small' /></IconButton> {/*onClick={() => handleDelete(movie._id)}*/}
+                                }}
+                                onClick={(e) => { e.stopPropagation(); handleMovieSave(movie) }}><AddIcon fontSize='small' /></IconButton> {/*onClick={() => handleDelete(movie._id)}*/}
                         </Box>
                         <CardMedia
                             component="img"
